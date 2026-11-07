@@ -184,7 +184,7 @@ export default function MapPage() {
             if (form.id) await edit(form.id, data)
             else { const t = await add(data); if (t.lat != null) select(t) }
           }}
-          onDelete={async (t) => { await remove(t); select(null) }}
+          onDelete={form.is_public ? null : async (t) => { await remove(t); select(null) }}
         />
       )}
     </div>

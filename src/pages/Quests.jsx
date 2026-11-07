@@ -87,7 +87,7 @@ export default function Quests() {
           </div>
         )}
         {shown.map((t) => (
-          <TaskCard key={t.id} task={t} onToggle={toggle} onEdit={setForm} onMap={(task) => nav(`/map?task=${task.id}`)} />
+          <TaskCard key={t.id} task={t} onToggle={toggle} onEdit={t.is_public ? undefined : setForm} onMap={(task) => nav(`/map?task=${task.id}`)} />
         ))}
       </div>
 
@@ -98,7 +98,7 @@ export default function Quests() {
           initial={form}
           onClose={() => setForm(null)}
           onSave={(data) => (form.id ? edit(form.id, data) : add(data))}
-          onDelete={remove}
+          onDelete={form.is_public ? null : remove}
         />
       )}
     </div>

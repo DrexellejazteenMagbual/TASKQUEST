@@ -1,4 +1,4 @@
-import { Check, Hourglass, MapPin, Navigation, Sparkles, TriangleAlert } from 'lucide-react'
+import { Check, Globe2, Hourglass, MapPin, Navigation, Sparkles, TriangleAlert } from 'lucide-react'
 import { PRIORITIES } from '../lib/game'
 
 const fmtDue = (d) => new Date(d).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
@@ -27,6 +27,7 @@ export default function TaskCard({ task, onToggle, onEdit, onMap, readOnly = fal
         {task.description && <div className="small muted" style={{ marginBottom: 6 }}>{task.description}</div>}
         <div className="row wrap" style={{ gap: 6 }}>
           <PriorityChip priority={task.priority} />
+          {task.is_public && <span className="chip"><Globe2 size={13} /> Public</span>}
           <span className="chip"><Sparkles size={13} /> {task.xp_reward} XP</span>
           {task.due_at && (
             <span className="chip" style={overdue ? { color: 'var(--h-red)' } : null}>

@@ -7,6 +7,8 @@ import { useAuth } from '../lib/auth'
 import { PRIORITIES, dayKey, levelInfo } from '../lib/game'
 import { DEFAULT_CENTER, timeAgo } from '../lib/geo'
 import { BaseMap, FitBounds, InvalidateSize } from '../components/MapKit'
+import TaskForm from '../components/TaskForm'
+import { useTasks } from '../lib/useTasks'
 import { Bars, Clock, Gauge, Panel, Radar, Readout, SegBar, Wave, hudAvatarPin, pad, useHudMode } from '../components/Hud'
 
 export const isOnline = (p) => Boolean(p.last_seen) && Date.now() - new Date(p.last_seen).getTime() < 3 * 60 * 1000
@@ -15,6 +17,7 @@ const hhmm = (d) => new Date(d).toLocaleTimeString([], { hour: '2-digit', minute
 export default function Admin() {
   useHudMode()
   const { profile: me } = useAuth()
+  const { add: addTask } = useTasks()
   const nav = useNavigate()
   const [users, setUsers] = useState([])
   const [tasks, setTasks] = useState([])
@@ -22,6 +25,7 @@ export default function Admin() {
   const [q, setQ] = useState('')
   const [filter, setFilter] = useState('all')
   const [loading, setLoading] = useState(true)
+  const [publicForm, setPublicForm] = useState(null)
   const [, tick] = useState(0)
 
   const load = useCallback(async () => {
@@ -111,7 +115,10 @@ export default function Admin() {
           <h1 className="hud-h1">COMMAND_CENTER</h1>
           <div className="hud-sub">TASKQUEST / ADMIN NODE / OPERATOR: {me.username} / <Clock /></div>
         </div>
-        <div className="hud-unit">UNIT-{pad(users.length)}</div>
+        <div className="row" style={{ gap: 10 }}>
+          <button className="hud-btn" onClick={() => setPublicForm({ is_public: true })}>+ PUBLIC QUEST</button>
+          <div className="hud-unit">UNIT-{pad(users.length)}</div>
+        </div>
       </header>
 
       {loading ? <div className="hud-empty">INITIALISING DATA LINK…</div> : (
@@ -276,6 +283,14 @@ export default function Admin() {
             <Wave level={Math.min(1, 0.3 + online.length / 10)} />
           </div>
         </div>
+      )}
+      {publicForm && (
+        <TaskForm
+          initial={publicForm}
+          allowPublic
+          onClose={() => setPublicForm(null)}
+          onSave={(data) => addTask({ ...data, is_public: true })}
+        />
       )}
     </div>
   )

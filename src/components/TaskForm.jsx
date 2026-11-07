@@ -1,6 +1,6 @@
 import { createPortal } from 'react-dom'
 import { useEffect, useState } from 'react'
-import { Sword, Trash2, X } from 'lucide-react'
+import { Globe2, Sword, Trash2, X } from 'lucide-react'
 import { PRIORITIES } from '../lib/game'
 import MapPicker from './MapPicker'
 
@@ -11,11 +11,12 @@ const toLocalInput = (iso) => {
 }
 
 // Bottom-sheet for creating / editing a quest
-export default function TaskForm({ initial, onSave, onDelete, onClose }) {
+export default function TaskForm({ initial, onSave, onDelete, onClose, allowPublic = false }) {
   const [title, setTitle] = useState(initial?.title || '')
   const [description, setDescription] = useState(initial?.description || '')
   const [priority, setPriority] = useState(initial?.priority || 'normal')
   const [due, setDue] = useState(toLocalInput(initial?.due_at))
+  const [isPublic, setIsPublic] = useState(Boolean(initial?.is_public))
   const [loc, setLoc] = useState(initial?.lat != null ? { lat: initial.lat, lng: initial.lng, place_name: initial.place_name } : null)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
@@ -41,6 +42,7 @@ export default function TaskForm({ initial, onSave, onDelete, onClose }) {
         lat: loc?.lat ?? null,
         lng: loc?.lng ?? null,
         place_name: loc?.place_name ?? null,
+        ...(allowPublic ? { is_public: isPublic } : {}),
       })
       onClose()
     } catch (ex) {
@@ -62,6 +64,13 @@ export default function TaskForm({ initial, onSave, onDelete, onClose }) {
           <label className="label" htmlFor="qt">Quest name</label>
           <input id="qt" className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Buy groceries" autoFocus={!editing} maxLength={120} />
         </div>
+
+        {allowPublic && (
+          <label className="row" style={{ cursor: 'pointer' }}>
+            <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} />
+            <span><Globe2 size={16} className="ico-inline" /> Publish for everyone</span>
+          </label>
+        )}
 
         <div className="field">
           <label className="label" htmlFor="qd">Details</label>

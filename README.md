@@ -11,7 +11,7 @@ A mobile-first, anime-style **gamified task tracker**. You add quests, pin them 
 | Area | What it does |
 |---|---|
 | **Login** | Plain username + password (sign up and log in) |
-| **Quests** | Add, edit and delete tasks with difficulty (Easy/Normal/Hard/Boss), due date and notes. Filter by Active, Today, Cleared or All |
+| **Quests** | Add, edit and delete tasks with difficulty (Easy/Normal/Hard/Boss), due date and notes. Admins can publish shared quests that every user can complete independently. Filter by Active, Today, Cleared or All |
 | **Map** | Every pinned quest appears as a marker. Tap 📍 then tap the map to create a quest at that spot. Select a quest to get a **route** by car, foot or bike with distance and ETA |
 | **Gamification** | XP per quest, levels and rank titles, day streaks, 11 achievements, "LEVEL UP!" splash |
 | **Profile** | Profile picture upload, display name and bio, achievements, 5 themes (Sakura, Neon Tokyo, Ocean, Forest, Crimson Sunset), privacy toggles |
@@ -28,7 +28,7 @@ A mobile-first, anime-style **gamified task tracker**. You add quests, pin them 
 
 ### 1. Create the Supabase project
 1. Go to <https://supabase.com> and create a new project (free tier is fine).
-2. Open **SQL Editor → New query**, paste the whole of [`supabase/schema.sql`](supabase/schema.sql) and click **Run**. Then do the same with [`supabase/002_email_login.sql`](supabase/002_email_login.sql).
+2. Open **SQL Editor → New query**, paste the whole of [`supabase/schema.sql`](supabase/schema.sql) and click **Run**. Then do the same with [`supabase/002_email_login.sql`](supabase/002_email_login.sql) and [`supabase/003_public_quests.sql`](supabase/003_public_quests.sql).
 3. **Required:** under **Authentication → Sign In / Providers → Email**, turn **OFF "Confirm email"** and save. Accounts are username-only, so there's no inbox to confirm, and with it ON sign-ups fail with "email rate limit exceeded".
 
 ### 2. Configure the app
@@ -77,6 +77,7 @@ After the first deploy, add the Render URL to Supabase **Authentication → URL 
 ```
 app/
 ├─ supabase/schema.sql        tables, RLS security, storage buckets, realtime
+├─ supabase/003_public_quests.sql  admin-created public quests and per-user completions
 ├─ scripts/create-admin.mjs   creates Admin / Admin101
 └─ src/
    ├─ lib/        supabase client, auth context, game rules (XP/achievements), themes, map/routing helpers

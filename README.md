@@ -90,6 +90,7 @@ app/
 ## Customising
 - **XP values, ranks, achievements:** `src/lib/game.js`
 - **Themes:** `src/lib/themes.js`
+- **System navigators:** `src/lib/navigator.js` and `public/characters/`
 - **Default map centre (Manila), map styles:** `src/lib/geo.js`
 - **Map markers:** `src/components/MapKit.jsx`
 

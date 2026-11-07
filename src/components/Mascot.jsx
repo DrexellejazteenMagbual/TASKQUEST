@@ -1,4 +1,4 @@
-// The user's system navigator (ZERA or KAI) as a HUD portrait.
+// The user's selected system navigator as a HUD portrait.
 // Used everywhere the app shows its companion character.
 import { useNavigator } from '../lib/navigator'
 

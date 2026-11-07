@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Marker, Polyline } from 'react-leaflet'
 import {
-  Bike, Car, Check, Eye, EyeOff, Footprints, LocateFixed, MapPin, MapPinned,
+  Bike, Car, Check, Eye, EyeOff, Footprints, Globe2, LocateFixed, MapPin, MapPinned,
   Pencil, Route, Sparkles, Undo2, X,
 } from 'lucide-react'
 import { useAuth } from '../lib/auth'
@@ -22,7 +22,7 @@ const MODES = {
 }
 
 export default function MapPage() {
-  const { profile } = useAuth()
+  const { profile, isAdmin } = useAuth()
   const { tasks, add, edit, remove, toggle } = useTasks()
   const toast = useToast()
   const [params, setParams] = useSearchParams()
@@ -131,6 +131,11 @@ export default function MapPage() {
             <button className="btn btn-sm" onClick={() => setShowDone((s) => !s)}>
               {showDone ? <EyeOff size={14} /> : <Eye size={14} />}{showDone ? 'Hide cleared' : 'Show cleared'}
             </button>
+            {isAdmin && (
+              <button className="btn btn-sm btn-accent" onClick={() => { setAddMode(false); setForm({ is_public: true }) }}>
+                <Globe2 size={14} /> Add public quest
+              </button>
+            )}
           </div>
         </div>
 
@@ -179,10 +184,14 @@ export default function MapPage() {
       {form && (
         <TaskForm
           initial={form}
+          allowPublic={isAdmin && form.is_public}
           onClose={() => setForm(null)}
           onSave={async (data) => {
             if (form.id) await edit(form.id, data)
-            else { const t = await add(data); if (t.lat != null) select(t) }
+            else {
+              const t = await add(form.is_public ? { ...data, is_public: true } : data)
+              if (t.lat != null) select(t)
+            }
           }}
           onDelete={form.is_public ? null : async (t) => { await remove(t); select(null) }}
         />

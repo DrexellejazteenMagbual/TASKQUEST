@@ -12,7 +12,7 @@ export default defineConfig({
         name: 'TaskQuest',
         short_name: 'TaskQuest',
         description: 'Turn your to-dos into quests on a map.',
-        theme_color: '#ffffff',
+        theme_color: '#04080b',
         background_color: '#04080c',
         display: 'standalone',
         orientation: 'any',

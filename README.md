@@ -54,8 +54,22 @@ Open the URL shown in the terminal. To try it on your phone, use the **Network**
 
 > 📱 **Phone note:** browsers allow GPS and the camera only on `https://` or `localhost`. For phone testing over Wi-Fi, deploy the app (step 5) or use a tunnel such as `npx localtunnel --port 5173`.
 
-### 5. Deploy (optional)
-`npm run build` creates `dist/`. Deploy it to Vercel or Netlify and set the three `VITE_` variables there. For a single-page app, add a rewrite of `/* → /index.html`.
+### 5. Deploy to Render (optional)
+The repository includes [`render.yaml`](../render.yaml), which configures the app as a Render Static Site with the `app/` root directory, Vite build command and `dist` publish directory.
+
+1. Push the repository to GitHub or GitLab.
+2. In Render, choose **New → Blueprint** and select the repository.
+3. Confirm the service named `taskquest`, then create it.
+4. In the service's **Environment** settings, enter:
+   - `VITE_SUPABASE_URL`: the Supabase Project URL
+   - `VITE_SUPABASE_ANON_KEY`: the Supabase `anon`/public key
+   - `VITE_MAPBOX_TOKEN`: the Mapbox public token
+   - `VITE_AUTH_EMAIL_BASE`: the real mailbox base used for username aliases
+5. Trigger a deploy. Render runs the build in `app/` and publishes `dist`.
+
+After the first deploy, add the Render URL to Supabase **Authentication → URL Configuration → Redirect URLs**. Also restrict the Mapbox public token to the Render hostname.
+
+`SUPABASE_SERVICE_ROLE_KEY` is not needed by the frontend Static Site and must not be added to Render. It is only for the local `create-admin` script.
 
 ---
 

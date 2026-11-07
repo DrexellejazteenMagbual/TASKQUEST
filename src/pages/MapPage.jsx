@@ -29,6 +29,7 @@ export default function MapPage() {
 
   const me = useMyLocation() // cached instantly, refined live
   const centered = useRef(false)
+  const centeredAccuracy = useRef(null)
   const [selectedId, setSelectedId] = useState(params.get('task'))
   const [addMode, setAddMode] = useState(false)
   const [form, setForm] = useState(null)
@@ -46,8 +47,14 @@ export default function MapPage() {
 
   // centre on the user once, as soon as the first position is known
   useEffect(() => {
-    if (!me || centered.current || params.get('task')) return
+    if (!me || params.get('task')) return
+    const shouldRefineCenter = centered.current
+      && Number.isFinite(centeredAccuracy.current)
+      && Number.isFinite(me.accuracy)
+      && me.accuracy < centeredAccuracy.current * 0.5
+    if (centered.current && !shouldRefineCenter) return
     centered.current = true
+    centeredAccuracy.current = me.accuracy
     setFocus({ lat: me.lat, lng: me.lng, zoom: 14 })
   }, [me]) // eslint-disable-line react-hooks/exhaustive-deps
 

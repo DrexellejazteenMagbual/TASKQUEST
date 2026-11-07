@@ -3,8 +3,8 @@
 // Why it's fast:
 //  1. The last known position is kept in memory and localStorage, so maps can
 //     centre instantly, even right after a reload.
-//  2. A quick low-accuracy fix (Wi-Fi / cell, usually < 1 s) is requested first,
-//     and GPS refines it in the background.
+//  2. A fresh high-accuracy GPS fix is requested first, with a network-based
+//     fallback if GPS is unavailable.
 //  3. A single watchPosition() is shared by every page instead of each page
 //     starting its own GPS request.
 import { useEffect, useState } from 'react'
@@ -31,22 +31,37 @@ function update(p) {
 
 export const getLastKnown = () => last
 
-// Resolves quickly: a recent cached position if there is one, otherwise the
-// first fix that arrives (low-accuracy usually wins). GPS keeps refining after.
+// Resolves with a fresh high-accuracy fix when possible. A network-based fix is
+// used only when GPS times out or is unavailable.
 export function getCurrentPosition({ maxAge = 30000 } = {}) {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) { reject(new Error('Geolocation not supported')); return }
-    if (last && Date.now() - last.at < maxAge) {
+    if (last && Date.now() - last.at < maxAge && last.accuracy <= 50) {
       resolve(last)
       refine()
       return
     }
     let done = false
-    let failures = 0
-    const ok = (p) => { const pos = update(p); if (!done) { done = true; resolve(pos) } }
-    const fail = (e) => { if (++failures === 2 && !done) { done = true; last ? resolve(last) : reject(e) } }
-    navigator.geolocation.getCurrentPosition(ok, fail, { enableHighAccuracy: false, maximumAge: 300000, timeout: 8000 })
-    navigator.geolocation.getCurrentPosition(ok, fail, { enableHighAccuracy: true, maximumAge: 10000, timeout: 20000 })
+    let fallbackError = null
+    const finish = (p) => {
+      if (done) return
+      done = true
+      resolve(update(p))
+    }
+    const fallback = (e) => {
+      fallbackError = e
+      navigator.geolocation.getCurrentPosition(finish, (fallbackFailure) => {
+        if (!done) {
+          done = true
+          last ? resolve(last) : reject(fallbackError || fallbackFailure)
+        }
+      }, { enableHighAccuracy: false, maximumAge: 60000, timeout: 8000 })
+    }
+    navigator.geolocation.getCurrentPosition(finish, fallback, {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 20000,
+    })
   })
 }
 

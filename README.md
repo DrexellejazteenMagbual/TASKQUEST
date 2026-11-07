@@ -71,7 +71,7 @@ After the first deploy, add the Render URL to Supabase **Authentication → URL 
 
 `SUPABASE_SERVICE_ROLE_KEY` is not needed by the frontend Static Site and must not be added to Render. It is only for the local `create-admin` script.
 
-The installed PWA caches the application shell, JavaScript, styles, images, fonts and recently used map tiles for offline startup. Supabase data, authentication, routing and geocoding still require a network connection.
+The installed PWA caches the application shell, JavaScript, styles, images, fonts and recently used map tiles for offline startup. Large optional navigator models are cached after they are first selected. Supabase data, authentication, routing and geocoding still require a network connection.
 
 ---
 

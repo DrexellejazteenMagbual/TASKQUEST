@@ -27,7 +27,9 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,webp}'],
+        // Large optional navigator PNGs are cached when selected rather than
+        // blocking the initial service-worker precache.
+        globPatterns: ['**/*.{js,css,html,svg,ico,webp}'],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api\//],

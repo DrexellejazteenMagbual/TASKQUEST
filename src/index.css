@@ -315,6 +315,16 @@ body:has(.nav) .pwa-banner { bottom: calc(var(--nav-h) + env(safe-area-inset-bot
   .stat b { font-size: 28px; }
 }
 
+/* compact bottom navigation for current iPhone-sized portrait screens */
+@media (min-width: 361px) and (max-width: 430px) and (orientation: portrait) {
+  :root { --nav-h: 60px; }
+  .nav { border-top-width: 2px; }
+  .nav a { gap: 0; padding: 3px 6px; font-size: 9px; line-height: 1.1; }
+  .nav a svg { width: 21px; height: 21px; }
+  .page { padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 18px); }
+  .map-bottom { bottom: 8px; }
+}
+
 /* phones in landscape: slimmer bar */
 @media (max-height: 480px) and (orientation: landscape) {
   :root { --nav-h: 56px; }

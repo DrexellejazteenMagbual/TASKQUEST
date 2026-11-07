@@ -16,7 +16,11 @@
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body, #root { height: 100%; }
+html, body, #root {
+  height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
 body {
   margin: 0;
   font-family: var(--font);
@@ -28,12 +32,20 @@ body {
   background-size: 22px 22px, 22px 22px;
   background-position: 0 0, 11px 11px;
   -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+  touch-action: manipulation;
 }
 button, input, select, textarea { font: inherit; color: inherit; }
 a { color: inherit; }
 
 /* ---------- layout ---------- */
-.app { min-height: 100%; position: relative; }
+.app {
+  height: 100%;
+  min-height: 100%;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 .page { padding: calc(16px + env(safe-area-inset-top)) 16px calc(var(--nav-h) + env(safe-area-inset-bottom) + 28px); max-width: 640px; margin: 0 auto; }
 .page-full { position: fixed; inset: 0 0 calc(var(--nav-h) + env(safe-area-inset-bottom)) 0; }
 .row { display: flex; align-items: center; gap: 10px; }

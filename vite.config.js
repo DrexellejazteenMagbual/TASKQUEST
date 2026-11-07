@@ -30,6 +30,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,ico,webp}'],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
           {
             // Mapbox map tiles: offline-friendly, refreshed in the background
@@ -50,7 +51,19 @@ export default defineConfig({
               cacheableResponse: { statuses: [0, 200] },
             },
           },
-          // Supabase data / auth and Mapbox directions & geocoding always go to the network
+          {
+            // Keep the installed app shell available after the first successful load.
+            urlPattern: ({ request }) => request.destination === 'script'
+              || request.destination === 'style'
+              || request.destination === 'image',
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'taskquest-static',
+              expiration: { maxEntries: 150, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          // Supabase data/auth and Mapbox directions/geocoding remain network-only.
         ],
       },
       devOptions: { enabled: false },

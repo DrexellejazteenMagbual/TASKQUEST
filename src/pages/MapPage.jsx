@@ -87,7 +87,7 @@ export default function MapPage() {
     catch { toast.show('Allow location access in your browser') }
   }
 
-  const routeColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#ff4f9a'
+  const routeColor = getComputedStyle(document.documentElement).getPropertyValue('--h-cyan').trim() || '#3ef0ff'
   const start = selected ? { lat: selected.lat, lng: selected.lng } : getLastKnown() || DEFAULT_CENTER
 
   return (

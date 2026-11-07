@@ -47,7 +47,7 @@ a { color: inherit; }
   overflow-y: auto;
 }
 .page { padding: calc(16px + env(safe-area-inset-top)) 16px calc(var(--nav-h) + env(safe-area-inset-bottom) + 28px); max-width: 640px; margin: 0 auto; }
-.page-full { position: fixed; inset: 0 0 calc(var(--nav-h) + env(safe-area-inset-bottom)) 0; }
+.page-full { position: fixed; inset: 0 0 calc(var(--nav-h)) 0; }
 .row { display: flex; align-items: center; gap: 10px; }
 .between { justify-content: space-between; }
 .wrap { flex-wrap: wrap; }
@@ -175,7 +175,7 @@ textarea.input { resize: vertical; min-height: 70px; }
 
 /* ---------- bottom nav ---------- */
 .nav {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 900;
+  position: fixed; bottom: calc(-1 * env(safe-area-inset-bottom)); left: 0; right: 0; z-index: 900;
   height: calc(var(--nav-h) + env(safe-area-inset-bottom));
   display: flex; justify-content: space-around; align-items: center;
   background: var(--card); border-top: 3px solid var(--ink); border-radius: 0;
